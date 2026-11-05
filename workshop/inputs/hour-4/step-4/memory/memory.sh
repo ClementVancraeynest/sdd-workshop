@@ -46,6 +46,10 @@ group_db="$here/group.sqlite"
 piece=800 # bytes of one memory: small enough to be about one thing
 
 command -v sqlite3 > /dev/null 2>&1 || { printf 'sqlite3 not found: install SQLite 3 with FTS5\n' >&2; exit 1; }
+# sq <sql> <sqlite3 options and db>: sqlite3 with the SQL on its input. On Windows, Git's sh
+# hands a native program its arguments through the ANSI code page: a found text with a
+# middle dot or an ellipsis in an argument came out as a broken letter (5 November).
+sq() { s=$1; shift; printf '%s\n' "$s" | sqlite3 "$@"; }
 
 # sql_quote: stdin as an SQL string literal, its quotes doubled.
 sql_quote() { sed "s/'/''/g; 1s/^/'/; \$s/\$/'/"; }
@@ -365,13 +369,13 @@ by_words() {
     # bm25 is lower for a better match: its negative sorts high first, as the vectors do.
     # The full-text match in a step of its own (MATERIALIZED): bm25 and snippet refuse to
     # run once SQLite folds the match into the join.
-    sqlite3 -readonly -batch -noheader -separator '	' "$1" "
+    sq "
       WITH h AS MATERIALIZED (
         SELECT rowid AS id, bm25($fts) AS score,
-          replace(replace(replace(snippet($fts, $c, '', '', '…', 40), char(9), ' '), char(10), ' '), char(13), ' ') AS piece
+          replace(replace(replace(snippet($fts, $c, '', '', char(8230), 40), char(9), ' '), char(10), ' '), char(13), ' ') AS piece
         FROM $fts WHERE $fts MATCH $m AND rowid IN ($(in_scope "$kind" "$3")))
       SELECT '$kind', min(h.id), -min(h.score), '$col', 'words:' || min(h.piece)
-      FROM h JOIN $(table_of "$kind") x ON x.id = h.id GROUP BY x.$col;"
+      FROM h JOIN $(table_of "$kind") x ON x.id = h.id GROUP BY x.$col;" -readonly -batch -noheader -separator '	' "$1"
   done | best "$4"
 }
 
@@ -410,7 +414,7 @@ show() {
   # clip <sql expression>: the text on one line, cut at the width.
   clip() {
     t="trim(replace(replace(replace($1, char(13), ' '), char(10), ' '), char(9), ' '))"
-    printf "CASE WHEN length(%s) > %s THEN substr(%s, 1, %s) || '…' ELSE %s END" "$t" "$w" "$t" "$w" "$t"
+    printf "CASE WHEN length(%s) > %s THEN substr(%s, 1, %s) || char(8230) ELSE %s END" "$t" "$w" "$t" "$w" "$t"
   }
   human="CASE s.kind WHEN 'chief' THEN 'You said' ELSE 'The graph asked' END"
   agent="CASE s.kind WHEN 'chief' THEN 'The chief' WHEN 'worker' THEN 'The worker' WHEN 'reviewer' THEN 'The reviewer' ELSE 'The agent' END"
@@ -441,7 +445,7 @@ show() {
           || char(10) || '     ' || coalesce(nullif(m.who, '') || ' said: ', '') || $(clip "$found")
           FROM memories m WHERE m.id = $id;" ;;
     esac
-    sqlite3 -readonly -batch -noheader "$1" "$q"
+    sq "$q" -readonly -batch -noheader "$1"
   done
 }
 
@@ -552,7 +556,7 @@ elif [ "$command" = eval ] && [ $# -gt 0 ]; then
 elif [ "$command" = tables ]; then
   tables
 elif [ "$command" = sql ] && [ $# -gt 0 ]; then
-  sqlite3 -readonly -box "$(which_db)" "$*"
+  sq "$*;" -readonly -box "$(which_db)"
 else
   printf 'Usage: sh memory/memory.sh index <folder>... [chief] | ask [--example] "<question>" | eval [--example] "<question>" | tables | sql [--example] "<SELECT>"\n'
 fi

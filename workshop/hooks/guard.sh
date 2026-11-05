@@ -30,16 +30,16 @@ if has '"toolName":"task"'; then
   deny "Workers are never launched with the task tool: the group could not see them. $watch cd <absolute group folder> && sh graph/worker.sh tickets/<ticket>.md . $follow"
 fi
 
-if has '"toolName":"bash"'; then
+if has '"toolName":"(bash|powershell)"'; then
   # 2. A worker or a run is never a command in a card or in the background.
-  if has '(sh|bash)[[:space:]]+([^[:space:]"]*/)?graph/worker\.sh|\./graph/worker\.sh|copilot[[:space:]]+(-p|--prompt)'; then
+  if has "(sh|bash)(\\.exe')?[[:space:]]+([^[:space:]\"]*/)?graph/worker\\.sh|\\./graph/worker\\.sh|copilot[[:space:]]+(-p|--prompt)"; then
     deny "A worker is never launched from a command card. $watch cd <absolute group folder> && sh graph/worker.sh tickets/<ticket>.md . $follow"
   fi
-  if has '(sh|bash)[[:space:]]+([^[:space:]"]*/)?graph/run\.sh|\./graph/run\.sh'; then
+  if has "(sh|bash)(\\.exe')?[[:space:]]+([^[:space:]\"]*/)?graph/run\\.sh|\\./graph/run\\.sh"; then
     deny "A run is never launched from a command card. $watch cd <absolute group folder> && sh graph/run.sh tickets/<ticket>.md . Read where it is with sh graph/state.sh graph/runs/<run>. $follow"
   fi
   # 3. Never sleep while something runs.
-  if has 'sleep[[:space:]]+([5-9]|[1-9][0-9])'; then
+  if has '[Ss]leep([[:space:]]+-[Ss]econds)?[[:space:]]+([5-9]|[1-9][0-9])'; then
     deny 'Never sleep while something runs: the group sits in silence. Say something to the group first, then look: read the terminal panel with read_terminal_output, or a short tail of the log (COS.md, Never sleep).'
   fi
   # 4. Nothing the group should see goes outside its folder.
@@ -47,6 +47,26 @@ if has '"toolName":"bash"'; then
     deny 'Nothing goes to /tmp or /var/folders: the group only sees its own folder. Write it under graph/runs/ in the group folder (COS.md, Transparency).'
   fi
 fi
+
+# 6. On Windows the terminal is Windows PowerShell: one form of command only, so the room
+# never sees a red error or garbled characters (rehearsal of 5 November; start.sh gives
+# the chief this form when the session starts).
+case ${WORKSHOP_OS:-$(uname -s)} in
+  MINGW* | MSYS* | CYGWIN*)
+    form="On Windows a command is exactly: [Console]::OutputEncoding = [Text.UTF8Encoding]::new(); cd '<folder>'; & 'C:\\\\Program Files\\\\Git\\\\bin\\\\sh.exe' <script> <args>"
+    if has '"toolName":"powershell"' || has '"canvasId":"terminal"'; then
+      if has '&&'; then
+        deny "Windows PowerShell does not know && and the room would see it fail in red. Join the parts with ; instead. $form"
+      fi
+      if has '(^|[;"(&|{]|[[:space:]])sh[[:space:]]'; then
+        deny "Windows does not find a bare sh and the room would see it fail in red. Call Git's sh by its path. $form"
+      fi
+      if has '"canvasId":"terminal"' && has '"command":' && ! has 'OutputEncoding'; then
+        deny "Without UTF-8 the panel prints the arrow and the tick as garbage. Start the command with the UTF-8 line. $form"
+      fi
+    fi
+    ;;
+esac
 
 # 5. The contract is open in the panel before its ticket is written.
 if has '"toolName":"open_canvas"'; then

@@ -1,6 +1,14 @@
 {
   "version": 1,
   "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "sh workshop/hooks/start.sh",
+        "cwd": ".",
+        "timeoutSec": 30
+      }
+    ],
     "preToolUse": [
       {
         "type": "command",

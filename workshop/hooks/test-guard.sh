@@ -8,7 +8,7 @@ fail=0
 s="test-$$"
 rm -f "$here/.panel/$s"
 
-call() { printf '%s' "$1" | sh "$here/guard.sh"; }
+call() { printf '%s' "$1" | WORKSHOP_OS=Darwin sh "$here/guard.sh"; }
 denied() { # denied <description> <json>
   if call "$2" | grep -q '"permissionDecision":"deny"'; then echo "  ok   $1"; else echo "  FAIL $1"; fail=1; fi
 }
@@ -43,6 +43,27 @@ allowed 'opening graph/NODE.md in the editor panel' \
   "{\"sessionId\":\"$s\",\"toolName\":\"open_canvas\",\"toolArgs\":{\"canvasId\":\"editor\",\"instanceId\":\"node-md\",\"input\":{\"path\":\"group-4/graph/NODE.md\",\"scope\":\"repo\"}}}"
 allowed 'writing ticket 000 once graph/NODE.md is open' \
   "{\"sessionId\":\"$s\",\"toolName\":\"edit\",\"toolArgs\":{\"path\":\"/x/group-4/tickets/000-node.md\",\"old_str\":\"a\",\"new_str\":\"b\"}}"
+
+# Windows (rehearsal of 5 November): the panel is Windows PowerShell.
+win() { # win <denied|allowed> <description> <json>
+  if printf '%s' "$3" | WORKSHOP_OS=MINGW64_NT-10.0 sh "$here/guard.sh" | grep -q '"permissionDecision":"deny"'; then got=denied; else got=allowed; fi
+  if [ "$got" = "$1" ]; then echo "  ok   $2"; else echo "  FAIL $2"; fail=1; fi
+}
+panel() { printf '{"sessionId":"%s","toolName":"open_canvas","toolArgs":{"canvasId":"terminal","instanceId":"run-010","input":{"command":"%s"}}}' "$s" "$1"; }
+ps_call() { printf '{"sessionId":"%s","toolName":"powershell","toolArgs":{"command":"%s","description":"x"}}' "$s" "$1"; }
+good="[Console]::OutputEncoding = [Text.UTF8Encoding]::new(); cd 'C:\\\\Users\\\\x\\\\step-4'; & 'C:\\\\Program Files\\\\Git\\\\bin\\\\sh.exe' graph/run.sh tickets/010-sale-discount.md"
+win denied 'Windows: the panel with && (5 Nov: red error)' "$(panel 'cd C:\\\\Users\\\\x\\\\step-4 && sh graph/run.sh tickets/010-sale-discount.md')"
+win denied 'Windows: the panel with a bare sh (5 Nov: sh is not recognized)' "$(panel "[Console]::OutputEncoding = [Text.UTF8Encoding]::new(); cd 'C:\\\\x'; sh graph/run.sh tickets/010.md")"
+win denied 'Windows: the panel without UTF-8 (5 Nov: garbled arrow and tick)' "$(panel "cd 'C:\\\\x'; & 'C:\\\\Program Files\\\\Git\\\\bin\\\\sh.exe' graph/run.sh tickets/010.md")"
+win allowed 'Windows: the panel in the Windows form' "$(panel "$good")"
+win denied 'Windows: a run in a PowerShell command card' "$(ps_call "$good")"
+win denied 'Windows: Start-Sleep 45 in PowerShell' "$(ps_call 'Start-Sleep -Seconds 45')"
+win allowed 'Windows: the status through Git sh' "$(ps_call "& 'C:\\\\Program Files\\\\Git\\\\bin\\\\sh.exe' workshop.sh status")"
+if printf '%s' "$(panel 'cd /x && sh graph/run.sh tickets/010.md')" | WORKSHOP_OS=Darwin sh "$here/guard.sh" | grep -q deny; then echo '  FAIL the Mac panel with && stays allowed'; fail=1; else echo '  ok   the Mac panel with && stays allowed'; fi
+if WORKSHOP_OS=MINGW64_NT-10.0 sh "$here/start.sh" | grep -q '"additionalContext":"This computer runs Windows'; then echo '  ok   start.sh gives the Windows form on Windows'; else echo '  FAIL start.sh gives the Windows form on Windows'; fail=1; fi
+if [ -z "$(WORKSHOP_OS=Darwin sh "$here/start.sh")" ]; then echo '  ok   start.sh says nothing on a Mac'; else echo '  FAIL start.sh says nothing on a Mac'; fail=1; fi
+if deny_out=$(printf '%s' "$(panel 'cd x && sh y')" | WORKSHOP_OS=MINGW64_NT-10.0 sh "$here/guard.sh") && printf '%s' "$deny_out" | python3 -c 'import json,sys; json.load(sys.stdin)' 2>/dev/null; then echo '  ok   the Windows refusal is valid JSON'; else echo '  FAIL the Windows refusal is valid JSON'; fail=1; fi
+if python3 -c 'import json,sys; json.load(open(sys.argv[1]))' "$here/windows.json" 2>/dev/null; then echo '  ok   windows.json is valid JSON'; else echo '  FAIL windows.json is valid JSON'; fail=1; fi
 
 rm -f "$here/.panel/$s"
 exit "$fail"
