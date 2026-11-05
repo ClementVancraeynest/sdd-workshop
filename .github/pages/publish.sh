@@ -21,21 +21,19 @@ git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
 # publish: one attempt. Exit 0 published or nothing to publish, 1 the push was refused.
 publish() {
-  # The site as it is now, or a new empty branch the first time, in an isolated clone: no
-  # worktree, no branch added to this checkout. The push goes from this checkout, which
+  # The site as it is now, cloned from the branch gh-pages of origin, or a new empty
+  # repository the first time: an isolated clone, no worktree, no branch added to this
+  # checkout. It commits as this checkout's author. The push goes from this checkout, which
   # holds the workflow's credentials.
-  top=$(git rev-parse --show-toplevel)
   rm -rf "$site"
   if git ls-remote --exit-code --heads origin gh-pages > /dev/null 2>&1; then
-    git fetch -q origin gh-pages
-    at=$(git rev-parse FETCH_HEAD)
-    git clone -q --local --no-checkout "$top" "$site"
-    git -C "$site" checkout -q --detach "$at"
+    git clone -q --single-branch --branch gh-pages "$(git remote get-url origin)" "$site"
   else
-    git clone -q --local --no-checkout "$top" "$site"
+    git init -q "$site"
     git -C "$site" checkout -q --orphan gh-pages
-    git -C "$site" rm -rqf . 2> /dev/null || true
   fi
+  git -C "$site" config user.name "$(git config user.name)"
+  git -C "$site" config user.email "$(git config user.email)"
 
   # This group's folder, replaced by its app as merged; the browser's test profile is not part of it.
   rm -rf "${site:?}/$group"
