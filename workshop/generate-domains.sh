@@ -210,7 +210,7 @@ fact	The average basket is 23 euros. The busiest hour is seven to eight in the e
 fact	Almost every regular has a mobile phone. Many of the older ones never open an app or a QR code.
 fact	Points expire 12 months after they are earned. Nuria's accountant needs it: unspent points count as a debt to the customer.
 fact	Nuria can give away 5 % of a sale, not more, or the shop stops making money on it.
-goal	Points live in both shops before the summer, when the regulars start to go to the beach. Done, for Nuria, means a regular earns and spends points at the till without a card and without slowing the queue.
+goal	Points at the till before the summer, when the regulars start to go to the beach. Done, for Nuria, means a regular earns and spends points at the till without a card and without slowing the queue.
 decision	How points are earned	1 point per euro, or 1 point per 10 euros but each point worth more? Per euro feels generous and is easy to explain; per 10 euros keeps numbers small.	1 point per euro spent.	The average basket is 23 euros: 23 points, or 2.
 decision	How the customer is identified	Phone number, or a QR code on their phone? A phone number works for everyone; a QR code is faster and keeps the number private.	Phone number.	Almost everyone has a phone; many of the older regulars never open a QR code.
 decision	Minimum to spend points	Any amount, or blocks of 100 points? Any amount is flexible; blocks are easier at the till.	Blocks of 100 points; 100 points take 5.00 off.	The queue peaks at seven in the evening, and Nuria can give away 5 % of a sale at most.

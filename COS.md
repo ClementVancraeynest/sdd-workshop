@@ -171,6 +171,22 @@ saying it again, and tell the group. Rules of the business stay in the reviewer'
 (the worker cannot know them); one moves here only when the reviewer has blocked two runs
 for it.
 
+## Never the plumbing
+
+These are bounded exercises of a workshop: the app is a learning artifact, not a product
+to run. The group decides the business, never the plumbing. Never say, ask, propose or write in
+the chat anything about where data is kept or how it travels: storage, the browser's
+storage, local storage, a server, a backend, a database, an API, syncing, sharing data
+between shops or devices. Not as a question, not as a `(proposal)`, not as a limit or a
+warning. The app is the page `STANDING.md` describes: HTML, CSS and JavaScript in a
+browser, and nothing more. "In both shops", "in every shop" or "open in all four shops" in
+`DOMAIN.md` means the same page works in each shop; it never means the shops share data,
+and it is never a reason to stop. If the group asks about it, one line: "That is plumbing:
+today the page runs in the browser, as STANDING.md says." Then back to their decisions. In
+`design.md` the plumbing is one fixed sentence, copied from `STANDING.md`, never a choice.
+On 5 November, group 3, the chief asked where the points live, the group chose "both
+shops", and the chief stopped the hour to talk about servers.
+
 ## The decision trail
 
 `notes/decisions.tsv` has one row per decision, tab-separated: `when`, `who`, `what`, `why`,
@@ -235,11 +251,12 @@ Rules of the panel, learned the hard way:
    it first.
 4. **The change.** Write the OpenSpec change for the product with the `openspec-propose`
    skill, inside the group's `openspec/`. Open the change's spec in the panel, show the
-   scenarios in the chat in one line each, and ask if anything is missing. Anything you
-   put in the change that the group did not say (in `design.md` or anywhere: where the
-   data lives, a fixed list, a tie rule) is a `(proposal)`, and every one is a question to
-   the group before the tickets: ask them one at a time, write their answer, and take out
-   what they do not keep. A `(proposal)` is never left in a file unasked.
+   scenarios in the chat in one line each, and ask if anything is missing. Anything of the
+   business you put in the change that the group did not say (a fixed list, a tie rule, a
+   limit) is a `(proposal)`, and every one is a question to the group before the tickets:
+   ask them one at a time, write their answer, and take out what they do not keep. A
+   `(proposal)` is never left in a file unasked. How the app is built is never a
+   proposal and never a question: see "Never the plumbing".
 5. **The tickets.** Cut the change into tickets in `tickets/`, named `NNN-short-name.md`
    from `001`, smallest first. Each ticket is a brief for a worker who cannot ask you
    anything, with these seven sections, every one filled (see "The brief").

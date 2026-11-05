@@ -28,9 +28,9 @@ stamping twice to be kind.
 
 ## The goal
 
-Points live in both shops before the summer, when the regulars start to go to the beach.
-Done, for Nuria, means a regular earns and spends points at the till without a card and
-without slowing the queue.
+Points at the till before the summer, when the regulars start to go to the beach. Done,
+for Nuria, means a regular earns and spends points at the till without a card and without
+slowing the queue.
 
 ## Open decisions
 
