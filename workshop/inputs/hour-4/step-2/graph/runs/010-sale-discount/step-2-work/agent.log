@@ -1,0 +1,32 @@
+11:58:13  → Reading .github/skills/worker/SKILL.md
+11:58:13  → Reading tickets/010-sale-discount.md
+11:58:13  → Reading graph/REPORT.md
+11:58:15  → Read the sale code, test and domain notes
+
+11:58:18  “ I'm settling on applying the discount per line, rounded to the nearest penny.
+11:58:18  → Read the full domain notes and test helper
+
+11:58:21  “ I'm going with the domain rule.
+            Writing the test page first, including a case that proves the discount is applied per line, as DOMAIN.md says.
+11:58:25  → Write the discount test and watch it fail
+
+11:58:27  “ Red as expected.
+            Now the code.
+11:58:30  → Add the discount code and run all checks
+
+11:58:32  “ All green.
+            Writing the report.
+11:58:35  → Write the worker report
+
+11:58:38  “ Ticket 010 is done and the report is written.
+            `sh app/check.sh test` passes every check, including the seven new ones.
+            The typecheck and lint print nothing and exit 0.
+            - Code: `receipt(lines, percent)` in `app/sale.js` takes the discount off each line and rounds each line to the penny.
+            This follows DOMAIN.md, which says a discount goes per line, never on the total.
+            The ticket's examples give the same numbers either way.
+            - No discount: With no percentage, or 0, the receipt is the same as before and has no `Discount` line.
+            - Errors: A percentage below 0 or above 100 throws `discount must be 0 to 100`.
+            I made a non-whole percentage throw the same error, since the ticket says a whole number.
+            - Tests: `app/test/discount.test.html` has one check per acceptance line, plus a per-line rounding case.
+            Two lines of £1.05 at 10% give a discount of -£0.22.
+            The report is at `graph/runs/010-sale-discount/step-2-work/report.md`.

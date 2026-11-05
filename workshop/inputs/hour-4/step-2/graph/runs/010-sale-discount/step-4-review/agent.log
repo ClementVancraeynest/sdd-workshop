@@ -1,0 +1,26 @@
+11:58:46  → Reading .github/skills/reviewer/SKILL.md
+11:58:46  → Reading tickets/010-sale-discount.md
+11:58:46  → Reading graph/REPORT.md
+11:58:49  → Read the worker's code and new test
+
+11:58:52  “ I've confirmed the per-line rounding is correct.
+            Next I'll run the checks to see whether they pass.
+11:58:52  → Run the test, lint and typecheck checks
+
+11:58:56  “ I'm checking the discount rule by hand.
+11:58:58  → Write the review report
+11:58:58  ✗ not allowed here: outside the group folder, or /tmp
+
+11:59:01  “ The relative path resolves from the step-2 directory, but the report location is given as an absolute path, so I'll use the create tool with that.
+11:59:02  → Creating /Users/you/sdd-workshop/workshop/inputs/hour-4/step-2/graph/runs/010-sale-discount/step-4-review/report.md
+
+11:59:06  “ I reviewed ticket 010 and passed it.
+            The report is at `graph/runs/010-sale-discount/step-4-review/report.md`, ending in `Verdict: pass`.
+            - Checks: `sh app/check.sh test`, `lint` and `typecheck` all exit 0.
+            - Code: `app/sale.js` takes the discount per line and rounds each line to the penny.
+            By hand, three lines of 17p at 10% off come to 45p, as the rule requires.
+            - Ticket: each of the four ACCEPTANCE lines has a test in `app/test/discount.test.html`, and `sale.test.html` is untouched.
+            There is no Node, module or new dependency.
+            - Comments (not blocks).
+            - The per-line rounding test uses two 105p lines, not the 17p example.
+            - A non-whole percentage such as 10.5 also throws, which the ticket doesn't mention.

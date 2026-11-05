@@ -1,0 +1,1 @@
+{"step":5,"name":"deliver","kind":"commands","dir":"app","run":"git add -A app && git commit -qm 010-sale-discount && sh graph/pr.sh 010-sale-discount 010-sale-discount","on_red":"stop","last":""}

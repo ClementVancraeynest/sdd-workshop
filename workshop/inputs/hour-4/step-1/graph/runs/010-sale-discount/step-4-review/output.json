@@ -1,0 +1,1 @@
+{"status":"red","why":"reviewer blocked: app/sale.js takes the percentage of the subtotal in `receipt` instead of per line rounded to the penny (three 17p lines at 10% give 46p, must be 45p).","started":"11:57:47","ended":"11:58:07"}

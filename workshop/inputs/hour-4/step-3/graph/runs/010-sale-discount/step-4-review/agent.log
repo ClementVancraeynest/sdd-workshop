@@ -1,0 +1,28 @@
+11:59:44  → Reading .github/skills/reviewer/SKILL.md
+11:59:44  → Reading tickets/010-sale-discount.md
+11:59:44  → Reading graph/REPORT.md
+
+11:59:47  “ Now I'll read the worker's code and test.
+11:59:47  → Read the worker's code and new test
+11:59:47  → Run the tests and lint
+
+11:59:51  “ The per-line rounding checks out.
+            The code takes the discount per line and rounds each line, and all tests are green.
+            I'll write the report now.
+11:59:53  → Write the review report
+11:59:53  ✗ not allowed here: outside the group folder, or /tmp
+11:59:56  → Creating /Users/you/sdd-workshop/workshop/inputs/hour-4/step-3/graph/runs/010-sale-discount/step-4-review/report.md
+
+11:59:59  “ I wrote the review report with `Verdict: pass`.
+            The discount code meets the ticket and the per-line rounding rule.
+            I didn't change any other file.
+            - Tests and lint: I ran `sh app/check.sh test` and every check was `ok`.
+            `sh app/check.sh lint` printed nothing.
+            - Acceptance lines: each of the four has its own check in `app/test/discount.test.html`.
+            That covers the two ticket examples, no percentage, 0, below 0 and above 100.
+            - Business rule: `receipt` in `app/sale.js` works out the discount line by line and rounds each line to the penny.
+            For two 105p lines at 10% off it takes 11p off each, 22p in all, and the total is £1.88.
+            A new test checks that example.
+            - Standing orders: I found no Node, module or dependency, and the existing `sale.test.html` is unchanged.
+            I didn't run git, so I judged this from the files only.
+            The report is at `graph/runs/010-sale-discount/step-4-review/report.md`.

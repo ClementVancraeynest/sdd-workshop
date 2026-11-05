@@ -1,0 +1,1 @@
+{"step":4,"name":"review","kind":"agent","dir":"app","skill":"reviewer","agent":"graph/copilot.sh","limit":180,"on_red":"stop","ticket":"tickets/010-sale-discount.md","last":""}

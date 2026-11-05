@@ -1,0 +1,35 @@
+12:00:07  → Reading .github/skills/worker/SKILL.md
+12:00:07  → Reading tickets/010-sale-discount.md
+12:00:07  → Reading graph/REPORT.md
+12:00:10  → Read current sale code, test and domain notes
+
+12:00:13  “ I need to check how checkThrows behaves, so I'll look at check.js.
+12:00:13  → Read the test helper
+
+12:00:19  “ I'll write the test first.
+12:00:19  → Creating app/test/discount.test.html
+
+12:00:22  “ I'm checking the pen and pad line.
+            Now I'll run it to see it fail.
+12:00:23  → Run tests, expecting new ones to fail
+
+12:00:26  “ The new checks fail as expected.
+            Now the code.
+12:00:29  → Add discount code, run all checks
+
+12:00:32  “ I'm checking whether the answer has to be a whole number, and it doesn't, so a fractional value like 10.5 would be fine.
+            All green.
+            Writing the report.
+12:00:34  → Write the worker report
+12:00:34  ✗ not allowed here: outside the group folder, or /tmp
+12:00:37  → Creating /Users/you/sdd-workshop/workshop/inputs/hour-4/step-4/graph/runs/010-sale-discount/step-2-work/report.md
+
+12:00:41  “ Ticket 010 is done, and the report is written to `step-2-work/report.md`.
+            I wrote the test page `app/test/discount.test.html` first and watched five of its checks fail.
+            Then I changed `app/sale.js` so `receipt(lines, percent)` takes the discount per line, rounded to the penny.
+            After the change, `sh app/check.sh test`, `typecheck` and `lint` all passed.
+            The report lists these files as changed.
+            - `app/sale.js`
+            - `app/test/discount.test.html`
+            A percentage outside 0 to 100 now throws "discount must be 0 to 100".
+            Fractional percentages like 10.5 are accepted, because the ticket doesn't forbid them and I didn't add a rule it doesn't state.

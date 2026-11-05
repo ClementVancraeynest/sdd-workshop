@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>sale</title>
+</head>
+<body>
+  <pre id="result"></pre>
+  <script src="check.js"></script>
+  <script src="../sale.js"></script>
+  <script>
+    check("money shows pence as pounds", money(2000), "£20.00");
+    check("money shows a single penny with two digits", money(705), "£7.05");
+    check("money shows money taken off with a minus", money(-200), "-£2.00");
+    check("a line costs its price times its quantity", lineTotal({ name: "Tea towel", pence: 350, qty: 2 }), 700);
+    check("the subtotal adds every line",
+      subtotal([{ name: "Wool scarf", pence: 2000, qty: 1 }, { name: "Tea towel", pence: 350, qty: 2 }]), 2700);
+    check("the receipt lists the lines, the subtotal and the total",
+      receipt([{ name: "Wool scarf", pence: 2000, qty: 1 }, { name: "Tea towel", pence: 350, qty: 2 }]),
+      ["1 x Wool scarf  £20.00", "2 x Tea towel  £7.00", "Subtotal  £27.00", "Total  £27.00"]);
+  </script>
+</body>
+</html>

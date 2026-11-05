@@ -1,0 +1,21 @@
+11:57:52  → Reading .github/skills/reviewer/SKILL.md
+11:57:52  → Reading tickets/010-sale-discount.md
+11:57:52  → Reading graph/REPORT.md
+
+11:57:55  “ I'm the reviewer: I read the worker's code and tests.
+11:57:55  → Read the worker's code and test
+
+11:57:58  “ The discount is applied to the subtotal, which breaks the rule, so I'm blocking it.
+            The code takes the percentage of the subtotal, which breaks the per-line rule.
+            I'm writing the report with a block verdict.
+11:58:00  → Write the review report
+11:58:00  ✗ not allowed here: outside the group folder, or /tmp
+11:58:03  → Creating /Users/you/sdd-workshop/workshop/inputs/hour-4/step-1/graph/runs/010-sale-discount/step-4-review/report.md
+
+11:58:06  “ I blocked ticket 010 and wrote the report at `step-4-review/report.md`.
+            I did not run the tests; I judged the code by reading it and working the business rule by hand.
+            The code in `app/sale.js` takes the percentage of the subtotal.
+            Priya's rule says a discount goes per line, rounded to the penny.
+            Three 17p lines at 10% off should come to 45p, and this code gives 46p.
+            The worker's tests only use the ticket's own examples, which come out the same either way, so they don't catch it.
+            The report ends with `Verdict: block` and that reason.

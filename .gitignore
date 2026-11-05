@@ -1,0 +1,14 @@
+**/graph/runs/*
+!**/graph/runs/.gitkeep
+**/.hour
+**/app/.browser/
+workshop/.check/
+workshop/hooks/.panel/
+**/memory/memory.log
+**/memory/.index.sql
+**/memory/group.sqlite
+**/memory/.embed.json
+**/memory/.vectors.sql
+**/memory/.near.json
+**/memory/.asked.txt
+**/memory/.empty/

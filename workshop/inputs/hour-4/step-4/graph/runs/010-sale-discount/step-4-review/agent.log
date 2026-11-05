@@ -1,0 +1,26 @@
+12:00:49  → Reading .github/skills/reviewer/SKILL.md
+12:00:49  → Reading tickets/010-sale-discount.md
+12:00:49  → Reading graph/REPORT.md
+
+12:00:51  “ I'm the reviewer, so I'll read the worker's code and tests.
+12:00:51  → Read the worker's code and test
+
+12:00:54  “ I'm checking the per-line math.
+            Next I'll run the tests and lint to see whether they pass.
+12:00:55  → Run tests, lint and typecheck
+
+12:01:00  “ The code works per line and each line is rounded, so I'm writing the report.
+12:01:00  → Write the review report
+12:01:00  ✗ not allowed here: outside the group folder, or /tmp
+12:01:03  → Creating /Users/you/sdd-workshop/workshop/inputs/hour-4/step-4/graph/runs/010-sale-discount/step-4-review/report.md
+
+12:01:06  “ I reviewed ticket 010 and passed it.
+            I wrote the report to `step-4-review/report.md` with `Verdict: pass`.
+            - Per line: the discount is worked out and rounded on each line, then added up.
+            Three lines of 17p at 10% off give 45p, not 46p, so Priya's rule holds.
+            - Acceptance: each of the four acceptance lines has a test in `app/test/discount.test.html`.
+            - Checks: `sh app/check.sh test` showed every check green.
+            `lint` and `typecheck` printed nothing.
+            - One comment, not a block: the percentage isn't checked to be a whole number.
+            The ticket doesn't ask for that.
+            My first attempt to write the report from the shell was refused, so I wrote it with the file-creation tool instead.

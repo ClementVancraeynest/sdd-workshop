@@ -1,0 +1,12 @@
+{"seq":1,"ts":"2026-11-05T11:59:08Z","event":"run_created","ticket":"tickets/010-sale-discount.md","folder":"graph/runs/010-sale-discount","workspace":"graph/runs/010-sale-discount/workspace","pid":72218}
+{"seq":2,"ts":"2026-11-05T11:59:08Z","event":"step_started","step":1,"name":"prepare","folder":"graph/runs/010-sale-discount/step-1-prepare"}
+{"seq":3,"ts":"2026-11-05T11:59:08Z","event":"step_done","step":1,"name":"prepare","status":"green","why":"commands passed: sh graph/copy.sh graph/runs/010-sale-discount/workspace 010-sale-discount"}
+{"seq":4,"ts":"2026-11-05T11:59:08Z","event":"step_started","step":2,"name":"work","folder":"graph/runs/010-sale-discount/step-2-work"}
+{"seq":5,"ts":"2026-11-05T11:59:38Z","event":"step_done","step":2,"name":"work","status":"green","why":"agent finished, report.md written"}
+{"seq":6,"ts":"2026-11-05T11:59:38Z","event":"step_started","step":3,"name":"check","folder":"graph/runs/010-sale-discount/step-3-check"}
+{"seq":7,"ts":"2026-11-05T11:59:39Z","event":"step_done","step":3,"name":"check","status":"green","why":"commands passed: sh app/check.sh lint && sh app/check.sh test"}
+{"seq":8,"ts":"2026-11-05T11:59:39Z","event":"step_started","step":4,"name":"review","folder":"graph/runs/010-sale-discount/step-4-review"}
+{"seq":9,"ts":"2026-11-05T12:00:01Z","event":"step_done","step":4,"name":"review","status":"green","why":"agent finished, report.md written"}
+{"seq":10,"ts":"2026-11-05T12:00:01Z","event":"step_started","step":5,"name":"deliver","folder":"graph/runs/010-sale-discount/step-5-deliver"}
+{"seq":11,"ts":"2026-11-05T12:00:01Z","event":"step_done","step":5,"name":"deliver","status":"green","why":"commands passed: git add -A app && git commit -qm 010-sale-discount && sh graph/pr.sh 010-sale-discount 010-sale-discount"}
+{"seq":12,"ts":"2026-11-05T12:00:01Z","event":"run_finished","status":"green","why":"step 5 green","workspace":"kept at graph/runs/010-sale-discount/workspace"}

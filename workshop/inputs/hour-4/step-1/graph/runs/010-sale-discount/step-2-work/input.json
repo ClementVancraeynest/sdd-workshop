@@ -1,0 +1,1 @@
+{"step":2,"name":"work","kind":"agent","dir":"app","skill":"worker","agent":"graph/copilot.sh","limit":300,"on_red":"stop","ticket":"tickets/010-sale-discount.md","last":""}

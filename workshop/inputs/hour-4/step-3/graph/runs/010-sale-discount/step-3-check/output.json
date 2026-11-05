@@ -1,0 +1,1 @@
+{"status":"green","why":"commands passed: sh app/check.sh lint && sh app/check.sh test","started":"11:59:38","ended":"11:59:39"}

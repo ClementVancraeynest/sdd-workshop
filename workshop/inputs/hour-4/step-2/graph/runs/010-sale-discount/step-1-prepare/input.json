@@ -1,0 +1,1 @@
+{"step":1,"name":"prepare","kind":"commands","dir":".","run":"sh graph/copy.sh graph/runs/010-sale-discount/workspace 010-sale-discount","on_red":"stop","last":""}

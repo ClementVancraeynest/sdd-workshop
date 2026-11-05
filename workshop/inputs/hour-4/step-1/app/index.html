@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harbour POS</title>
+</head>
+<body>
+  <h1>Harbour POS</h1>
+  <pre id="receipt"></pre>
+  <script src="sale.js"></script>
+  <script>
+    document.getElementById("receipt").textContent = receipt([
+      { name: "Wool scarf", pence: 2000, qty: 1 },
+      { name: "Tea towel", pence: 350, qty: 2 }
+    ]).join("\n");
+  </script>
+</body>
+</html>

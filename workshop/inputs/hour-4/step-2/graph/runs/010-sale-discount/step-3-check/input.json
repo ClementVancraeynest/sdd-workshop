@@ -1,0 +1,1 @@
+{"step":3,"name":"check","kind":"commands","dir":"app","run":"sh app/check.sh lint && sh app/check.sh test","on_red":2,"rounds":2,"last":""}

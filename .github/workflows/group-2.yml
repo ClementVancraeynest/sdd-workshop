@@ -1,0 +1,36 @@
+# Group 2: every pull request that touches group-2/ runs the app's tests and lint, so the
+# pull request shows green or red for this group only: a group that is behind never turns
+# another's red. When a pull request that touches group-2/app/ is merged into main, the
+# tests run again and, green, the app is published on the workshop's site, at
+# https://<owner>.github.io/<repo>/group-2/ (.github/pages/publish.sh). A red test
+# publishes nothing: the site keeps the last green app.
+name: group 2
+on:
+  pull_request:
+    paths:
+      - group-2/**
+  push:
+    branches: [main]
+    paths:
+      - group-2/app/**
+      - .github/workflows/group-2.yml
+      - .github/pages/publish.sh
+      - .github/pages/test.sh
+  workflow_dispatch:
+permissions:
+  contents: write
+# One queue per group and kind of event: two merges of the same group publish one after the
+# other. Two groups at once both publish: publish.sh tries again on top of the other's site.
+concurrency:
+  group: site-group-2-${{ github.event_name }}
+  cancel-in-progress: false
+jobs:
+  test-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: The app's tests and lint
+        run: sh .github/pages/test.sh group-2
+      - name: Publish group-2 on the site
+        if: github.event_name != 'pull_request'
+        run: sh .github/pages/publish.sh group-2

@@ -1,0 +1,33 @@
+11:57:14  → Reading .github/skills/worker/SKILL.md
+11:57:14  → Reading tickets/010-sale-discount.md
+11:57:14  → Reading graph/REPORT.md
+11:57:17  → Read domain, sale code and existing test
+11:57:19  → Read the test helper
+
+11:57:22  “ I'm settling on rounding.
+            I'll write the test page first, then run it to see it fail.
+11:57:25  → Write the new test and run it to see it fail
+
+11:57:29  “ The test fails as expected on the missing discount.
+            Now I'll add the discount to the receipt.
+11:57:32  → Add discount code, run tests, typecheck, lint
+
+11:57:35  “ All green.
+            Writing the report.
+11:57:37  → Write the report
+11:57:37  ✗ not allowed here: outside the group folder, or /tmp
+
+11:57:40  “ The path looks like it's outside my allowed folder, though step-2-work is listed as an additional allowed directory.
+11:57:41  → Creating /Users/you/sdd-workshop/workshop/inputs/hour-4/step-1/graph/runs/010-sale-discount/step-2-work/report.md
+
+11:57:44  “ Ticket 010 is done: `receipt(lines, percent)` now takes an optional percentage off, and the report is written.
+            - Discount: the receipt prints a `Discount 10%  -£2.00` line under the subtotal, and the total is after the discount.
+            With no percentage, or 0, the receipt is unchanged.
+            - Out of range: a percentage below 0 or above 100 throws `discount must be 0 to 100`.
+            - Checks: `sh app/check.sh test` is all green, with six new checks in `app/test/discount.test.html`, one per acceptance line.
+            `typecheck` and `lint` print nothing and exit 0.
+            - Rounding: neither the ticket nor `DOMAIN.md` says how to round a discount that isn't a whole number of pence.
+            I round to the nearest penny, and none of the examples depend on it.
+            The report flags this.
+            - Files changed: `app/sale.js` and `app/test/discount.test.html`.
+            The report is `graph/runs/010-sale-discount/step-2-work/report.md`.

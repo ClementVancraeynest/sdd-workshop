@@ -1,0 +1,28 @@
+11:59:13  → Reading .github/skills/worker/SKILL.md
+11:59:13  → Reading tickets/010-sale-discount.md
+11:59:13  → Reading graph/REPORT.md
+11:59:16  → Read the sale code, test and domain notes
+
+11:59:19  “ I'm working out the per-line discount with rounding, checking the worked example where the scarf comes to 200 and the towel to 70, for a total of 270, which matches.
+11:59:19  → Read the test helper
+
+11:59:25  “ I'll write the test first.
+11:59:25  → Creating app/test/discount.test.html
+11:59:25  → Run tests to see the new ones fail
+
+11:59:27  “ The new checks fail as expected.
+            Now the code.
+11:59:31  → Add discount code, run tests, typecheck, lint
+
+11:59:34  “ I'm checking that the money(-0) case for off=0 isn't reached, and then I'll write up the report.
+11:59:35  → Write the report
+
+11:59:37  “ Ticket 010 is done.
+            `receipt(lines, percent)` now takes a discount from 0 to 100.
+            It rounds the discount per line to the penny and prints a `Discount` line under the subtotal.
+            All tests, the typecheck and the lint pass.
+            I wrote the new test page first and saw it fail before changing the code.
+            A percentage outside 0–100 throws `discount must be 0 to 100`.
+            With no percentage or 0, the receipt is the same as before.
+            I changed only `app/sale.js` and the new `app/test/discount.test.html`.
+            The report is written at `step-2-work/report.md`.
