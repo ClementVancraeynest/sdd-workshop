@@ -102,7 +102,7 @@ for n in 1 2 3 4; do
       ;;
     4)
       check 'the memory is in the folder: memory.sh, the example team, the model and the vectors program' \
-        files "$d" memory/memory.sh memory/example-team.sqlite memory/minilm.bin memory/bin/vectors-darwin-arm64 memory/bin/vectors-darwin-amd64
+        files "$d" memory/memory.sh memory/example-team.sqlite memory/minilm.bin memory/bin/vectors-darwin-arm64 memory/bin/vectors-darwin-amd64 memory/bin/vectors-windows-amd64.exe
       check 'the rule is not in DOMAIN.md or the worker skill' \
         no_rule "$d/DOMAIN.md" "$d/.github/skills/worker/SKILL.md"
       check 'the memory finds it: ask --example answers with Priya on 19 February' memory_finds "$d"
