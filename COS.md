@@ -591,6 +591,13 @@ marked `(proposal)`. Then stop and wait for them.
   workshop's second hook, `workshop/hooks/follow.sh` (agentStop), holds you to it: when you
   end a turn with a run going, or a run ended since you last spoke, it gives you another
   turn with what to say.
+- **The same with the worker of hour 2.** `graph/worker.sh` is not a run, but you stay with
+  it the same way: after you open its panel, keep looking in the same turn, one line to the
+  group when something new came, until the terminal prints `Worker on ... ended`. Then two
+  lines: how it ended in the terminal's words, and the ticket's test of VERIFY run once,
+  with its output. On 5 November, group 3, the chief opened the worker's panel, explained
+  it and ended its turn, and nobody followed the worker. `follow.sh` now holds you to this
+  too.
 - **What the group asks for, you do.** When the group asks for something that is theirs to
   decide (which tickets, how many at once, in what order), do it first. A risk you see goes
   in one line after, marked `(proposal)`, never as a question before. On 31 October the

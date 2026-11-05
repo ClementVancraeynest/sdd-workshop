@@ -57,11 +57,41 @@ for j in "$root"/group-*/graph/runs/*/journal.jsonl "$root"/graph/runs/*/journal
     fi
   fi
 done
-[ -n "$ended$going" ] || exit 0
+
+# The worker of hour 2 (graph/worker.sh) is not a run: it keeps no journal. While it works
+# its lines go to graph/runs/worker-<ticket>.log.ansi; when it ends they move to
+# worker-<ticket>.log, whose last "Worker on ... ended" line says how. On 5 November, group
+# 3, the chief opened the worker's panel, explained it and ended its turn: nobody followed
+# the worker. A .log.ansi untouched for 15 minutes is a worker that died, not one working.
+wgoing=''
+wended=''
+for w in "$root"/group-*/graph/runs/worker-*.log.ansi; do
+  [ -f "$w" ] || continue
+  [ -n "$(find "$w" -mmin -15 2> /dev/null)" ] || continue
+  wgoing="$wgoing ${w#"$root"/};"
+done
+for w in "$root"/group-*/graph/runs/worker-*.log; do
+  [ -f "$w" ] || continue
+  line=$(grep 'Worker on .* ended ' "$w" | tail -n 1)
+  [ -n "$line" ] || continue
+  key="${w#"$root"/}: $line"
+  if grep -qxF "$key" "$told"; then continue; fi
+  printf '%s\n' "$key" >> "$told"
+  [ -z "$first" ] || continue
+  last=$(grep -E '(✓|✗) ' "$w" | tail -n 1 | sed 's/^[^✓✗]*//')
+  wended="$wended $line (${last:-no last line}), in ${w#"$root"/}."
+done
+[ -n "$ended$going$wended$wgoing" ] || exit 0
 
 reason=''
+if [ -n "$wended" ]; then
+  reason="A worker ended:$wended Tell the group now, in two lines: green (exit 0) or red, in the terminal's own words, and then run the ticket's test of VERIFY and show its output. If your last message already said it, end your turn."
+fi
+if [ -n "$wgoing" ]; then
+  reason="$reason${reason:+ }A worker is still working:$wgoing Do not end your turn while it works: read its terminal panel (invoke_canvas_action read_terminal_output), say one line to the group only when something new came, sleep 4 at most between looks, until the terminal prints Worker on ... ended. Then say how it ended."
+fi
 if [ -n "$ended" ]; then
-  reason="A run ended:$ended If your last message already said this with the link, end your turn and say nothing more. Else tell the group now, two lines per run: the result in the terminal's words, and the pull request link when there is one; for a red run, the reviewer's reason and that a person decides (read it with sh graph/state.sh graph/runs/<run>). Open graph/runs/<run>/pr.md in the editor panel when there is a pull request."
+  reason="$reason${reason:+ }A run ended:$ended If your last message already said this with the link, end your turn and say nothing more. Else tell the group now, two lines per run: the result in the terminal's words, and the pull request link when there is one; for a red run, the reviewer's reason and that a person decides (read it with sh graph/state.sh graph/runs/<run>). Open graph/runs/<run>/pr.md in the editor panel when there is a pull request."
 fi
 if [ -n "$going" ]; then
   reason="$reason${reason:+ }A run is still going:$going Do not end your turn while it goes: read its terminal panel (invoke_canvas_action read_terminal_output), say one line to the group only when something new came, sleep 4 at most between looks, until the terminal prints run ...: green or red. Then say the result and the link it prints."

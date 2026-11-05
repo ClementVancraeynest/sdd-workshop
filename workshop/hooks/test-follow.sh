@@ -53,7 +53,8 @@ out=$(stop)
 check 'a run in a step folder of hour 4 that ended: announced' said "$out" 'Run workshop/inputs/hour-4/step-1/graph/runs/010-sale-discount ended red: step 4 review red: reviewer blocked.'
 
 # The going run stops (its process gone) with no run_finished: it is not alive, nothing to say.
-sed -i '' "s/\"pid\":$$/\"pid\":999999/" "$runs/002-going/journal.jsonl"
+sed "s/\"pid\":$$/\"pid\":999999/" "$runs/002-going/journal.jsonl" > "$runs/002-going/journal.new"
+mv "$runs/002-going/journal.new" "$runs/002-going/journal.jsonl"
 out=$(stop)
 check 'a run whose process is gone and no new end: the turn ends' [ -z "$out" ]
 
@@ -82,5 +83,26 @@ mkdir -p "$runs/004-q"
 mv "$runs/004-q.journal" "$runs/004-q/journal.jsonl"
 out=$(stop)
 check 'the reason is valid JSON' python3 -c "import json,sys; json.loads(sys.argv[1])" "$out"
+
+# The worker of hour 2 (5 November, group 3: the chief ended its turn with the worker
+# working, and nobody followed it).
+printf '22:05:20  Worker on tickets/000-node.md, job 1 of 2\n' > "$runs/worker-000-node.log.ansi"
+out=$(stop)
+check 'a worker working: block' said "$out" '"decision":"block"'
+check 'it names the worker' said "$out" 'worker-000-node.log.ansi'
+check 'it tells the chief to stay until the worker ends' said "$out" 'Worker on ... ended'
+rm -f "$runs/worker-000-node.log.ansi"
+printf '22:06:02  \342\234\223 graph/tests/test-node.sh is green and the test did not change\nWorker on tickets/000-node.md ended 22:06:03, exit 0\n' > "$runs/worker-000-node.log"
+out=$(stop)
+check 'a worker that ended: block' said "$out" 'A worker ended'
+check 'it says how it ended' said "$out" 'exit 0'
+check 'it quotes the last line of the worker' said "$out" 'is green and the test did not change'
+check 'the worker reason is valid JSON' python3 -c "import json,sys; json.loads(sys.argv[1])" "$out"
+out=$(stop)
+check 'the ended worker is not announced twice' not_said "$out" 'A worker ended'
+printf 'x\n' > "$runs/worker-001-dead.log.ansi"
+touch -t 202601010000 "$runs/worker-001-dead.log.ansi"
+out=$(stop)
+check 'a worker log untouched for 15 minutes is not a worker working' not_said "$out" 'worker-001-dead'
 
 exit $fail
