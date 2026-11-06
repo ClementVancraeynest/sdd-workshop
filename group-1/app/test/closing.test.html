@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>closing</title></head>
+<body>
+<script src="check.js"></script>
+<script src="../basket.js"></script>
+<script src="../payment.js"></script>
+<script src="../returns.js"></script>
+<script src="../closing.js"></script>
+<script>
+Payment.reset();
+Returns.reset();
+
+var a = Basket.create();
+Basket.add(a, { name: "Shirt", priceCents: 1400 }, 1);
+Basket.add(a, { name: "Hat", priceCents: 2150 }, 1);
+var saleA = Payment.payByCash(a, 4000);
+Returns.create(saleA.receipt, [{ name: "Shirt", quantity: 1 }], "cash");
+check("1 drawer after sales and a refund: cash 3550 paid with 4000, refund 1400 gives 2150",
+  Closing.expectedCashCents(), 2150);
+
+Payment.reset();
+Returns.reset();
+
+var b = Basket.create();
+Basket.add(b, { name: "Jacket", priceCents: 3000 }, 1);
+var saleB = Payment.payByCard(b);
+Returns.create(saleB.receipt, [{ name: "Jacket", quantity: 1 }], "card");
+check("2 card does not touch the drawer: card sales and card refunds give 0",
+  Closing.expectedCashCents(), 0);
+</script>
+</body>
+</html>
