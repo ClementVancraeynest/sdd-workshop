@@ -6,7 +6,10 @@ var Returns = {
     Returns.list = [];
   },
 
-  create: function (receipt, items) {
+  create: function (receipt, items, method) {
+    if (method !== "card" && method !== "cash") {
+      throw new Error("the refund method must be card or cash");
+    }
     var sale = null;
     for (var i = 0; receipt && i < Payment.sales.length; i++) {
       if (Payment.sales[i].receipt === receipt) {
@@ -45,7 +48,7 @@ var Returns = {
       amount += line.priceCents * item.quantity;
     }
 
-    var result = { receipt: receipt, items: items, amountCents: amount };
+    var result = { receipt: receipt, items: items, amountCents: amount, method: method };
     Returns.list.push(result);
     return result;
   }
