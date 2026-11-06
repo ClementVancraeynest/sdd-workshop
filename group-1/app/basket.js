@@ -11,7 +11,11 @@ var Basket = {
         return basket;
       }
     }
-    basket.lines.push({ name: product.name, priceCents: product.priceCents, quantity: quantity });
+    var price = product.priceCents;
+    if (product.stickerPercent) {
+      price = Math.floor(price * (100 - product.stickerPercent) / 100);
+    }
+    basket.lines.push({ name: product.name, priceCents: price, quantity: quantity });
     return basket;
   },
 
