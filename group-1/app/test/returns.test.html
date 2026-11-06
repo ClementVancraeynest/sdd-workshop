@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>returns</title></head>
+<body>
+<script src="check.js"></script>
+<script src="../basket.js"></script>
+<script src="../payment.js"></script>
+<script src="../returns.js"></script>
+<script>
+Payment.reset();
+Returns.reset();
+
+var a = Basket.create();
+Basket.add(a, { name: "Shirt", priceCents: 1400 }, 2);
+var saleA = Payment.payByCard(a);
+var partial = Returns.create(saleA.receipt, [{ name: "Shirt", quantity: 1 }]);
+check("1 partial return: one of two shirts at 1400 refunds 1400",
+  partial.amountCents, 1400);
+
+var b = Basket.create();
+Basket.add(b, { name: "Jacket", priceCents: 1399 }, 1);
+var saleB = Payment.payByCard(b);
+var discounted = Returns.create(saleB.receipt, [{ name: "Jacket", quantity: 1 }]);
+check("2 discounted product: a jacket sold at 1399 refunds 1399",
+  discounted.amountCents, 1399);
+
+checkThrows("3 no receipt: a return without a receipt is refused",
+  function () { Returns.create(undefined, [{ name: "Shirt", quantity: 1 }]); }, "receipt");
+
+var c = Basket.create();
+Basket.add(c, { name: "Cap", priceCents: 1000 }, 1);
+var saleC = Payment.payByCard(c);
+checkThrows("4 too many: one cap bought, two returned, is refused",
+  function () { Returns.create(saleC.receipt, [{ name: "Cap", quantity: 2 }]); }, "more than");
+
+var d = Basket.create();
+Basket.add(d, { name: "Hat", priceCents: 1000 }, 1);
+var saleD = Payment.payByCard(d);
+Returns.create(saleD.receipt, [{ name: "Hat", quantity: 1 }]);
+var before = Returns.list.length;
+checkThrows("5 twice: the same hat returned again is refused and not recorded",
+  function () { Returns.create(saleD.receipt, [{ name: "Hat", quantity: 1 }]); }, "more than");
+check("5 twice: the refused return left the list unchanged",
+  Returns.list.length, before);
+</script>
+</body>
+</html>
