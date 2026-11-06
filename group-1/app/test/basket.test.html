@@ -20,6 +20,16 @@ check("2 same product twice: one line of quantity 2, total 4000",
 check("3 no VAT line: only lines in the basket, a number as total",
   { keys: Object.keys(a), total: typeof Basket.total(a) },
   { keys: ["lines"], total: "number" });
+
+var c = Basket.create();
+Basket.add(c, { name: "Jacket", priceCents: 2000, stickerPercent: 30 }, 1);
+check("4 sticker: 20.00 at 30 % has line price 1400 and total 1400",
+  { price: c.lines[0].priceCents, total: Basket.total(c) },
+  { price: 1400, total: 1400 });
+
+var d = Basket.create();
+Basket.add(d, { name: "Scarf", priceCents: 1999, stickerPercent: 30 }, 1);
+check("5 rounding down: 19.99 at 30 % has line price 1399", d.lines[0].priceCents, 1399);
 </script>
 </body>
 </html>
