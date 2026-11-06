@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>screen</title></head>
+<body>
+<script src="check.js"></script>
+<iframe id="page" src="../index.html" style="width:600px;height:600px"></iframe>
+<script>
+var frame = document.getElementById("page");
+// The browser dumps the page when it has loaded; this open document keeps it loading until the checks are done.
+var hold = document.createElement("iframe");
+hold.style.display = "none";
+document.body.appendChild(hold);
+hold.contentDocument.open();
+var waiting = {};
+var count = 0;
+
+window.addEventListener("message", function (event) {
+  if (event.data && waiting[event.data.n]) {
+    waiting[event.data.n](event.data.value);
+    delete waiting[event.data.n];
+  }
+});
+
+// ask(message): sends one message to the page and gives back what it answers.
+function ask(message) {
+  return new Promise(function (resolve) {
+    message.n = ++count;
+    waiting[message.n] = resolve;
+    frame.contentWindow.postMessage(message, "*");
+  });
+}
+
+function set(id, value) { return ask({ op: "set", id: id, value: value }); }
+function click(id) { return ask({ op: "click", id: id }); }
+function read(id) { return ask({ op: "read", id: id }); }
+
+async function add(name, price) {
+  await set("name", name);
+  await set("price", price);
+  await click("add");
+}
+
+frame.onload = async function () {
+  check("1 product name: title and heading read Shop checkout",
+    { title: await read("title"), heading: await read("heading") },
+    { title: "Shop checkout", heading: "Shop checkout" });
+
+  await add("Shirt", "20.00");
+  await add("Cap", "15.50");
+  check("2 total on screen: 20.00 and 15.50 read 35.50", await read("total"), "35.50");
+
+  await set("received", "30.00");
+  await click("pay-cash");
+  check("4 short cash: 30.00 received says not enough and no sale is closed",
+    { message: /not enough/.test(await read("message")), sales: await read("sales"),
+      total: await read("total") },
+    { message: true, sales: 0, total: "35.50" });
+
+  await set("received", "40.00");
+  await click("pay-cash");
+  check("3 change on screen: 40.00 received reads 4.50", await read("change"), "4.50");
+
+  check("5 no VAT line: the page text contains no VAT",
+    /VAT/i.test(await read("page")), false);
+  hold.contentDocument.close();
+};
+</script>
+</body>
+</html>

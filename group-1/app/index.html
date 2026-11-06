@@ -7,5 +7,134 @@
 </head>
 <body>
   <h1>Shop checkout</h1>
+
+  <form id="add-form">
+    <label>Name <input id="name" type="text"></label>
+    <label>Price (euros) <input id="price" type="text" inputmode="decimal"></label>
+    <label>Quantity <input id="quantity" type="text" inputmode="numeric" value="1"></label>
+    <label>Sticker (percent) <input id="sticker" type="text" inputmode="numeric" value="0"></label>
+    <button id="add" type="submit">Add product</button>
+  </form>
+
+  <ul id="lines"></ul>
+  <p>Total: <span id="total">0.00</span></p>
+
+  <p>
+    <label>Cash received (euros) <input id="received" type="text" inputmode="decimal"></label>
+  </p>
+  <p>
+    <button id="pay-card" type="button">Pay by card</button>
+    <button id="pay-cash" type="button">Pay by cash</button>
+  </p>
+  <p>Change: <span id="change"></span></p>
+  <p id="message"></p>
+
+  <script src="basket.js"></script>
+  <script src="payment.js"></script>
+  <script>
+    var basket = Basket.create();
+
+    function euros(cents) {
+      var whole = Math.floor(cents / 100);
+      var rest = cents % 100;
+      return whole + "." + (rest < 10 ? "0" : "") + rest;
+    }
+
+    function toCents(text) {
+      var value = parseFloat(String(text).replace(",", "."));
+      return isNaN(value) ? NaN : Math.round(value * 100);
+    }
+
+    function el(id) {
+      return document.getElementById(id);
+    }
+
+    function render() {
+      el("total").textContent = euros(Basket.total(basket));
+      var list = el("lines");
+      list.textContent = "";
+      for (var i = 0; i < basket.lines.length; i++) {
+        var l = basket.lines[i];
+        var item = document.createElement("li");
+        item.textContent = l.name + " x" + l.quantity + " at " + euros(l.priceCents);
+        list.appendChild(item);
+      }
+    }
+
+    function newSale() {
+      basket = Basket.create();
+      render();
+    }
+
+    el("add-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      var name = el("name").value.trim();
+      var cents = toCents(el("price").value);
+      var quantity = parseInt(el("quantity").value, 10);
+      var sticker = parseInt(el("sticker").value, 10) || 0;
+      if (name === "" || isNaN(cents) || cents < 0 || isNaN(quantity) || quantity < 1 ||
+          sticker < 0 || sticker > 100) {
+        el("message").textContent = "Enter a name, a price, a quantity and a sticker from 0 to 100.";
+        return;
+      }
+      Basket.add(basket, { name: name, priceCents: cents, stickerPercent: sticker }, quantity);
+      el("message").textContent = "";
+      el("change").textContent = "";
+      el("name").value = "";
+      el("price").value = "";
+      el("quantity").value = "1";
+      el("sticker").value = "0";
+      render();
+    });
+
+    el("pay-card").addEventListener("click", function () {
+      if (basket.lines.length === 0) {
+        el("message").textContent = "The basket is empty.";
+        return;
+      }
+      var sale = Payment.payByCard(basket);
+      el("message").textContent = "Paid by card. Receipt " + sale.receipt + ".";
+      el("change").textContent = "";
+      newSale();
+    });
+
+    el("pay-cash").addEventListener("click", function () {
+      if (basket.lines.length === 0) {
+        el("message").textContent = "The basket is empty.";
+        return;
+      }
+      var received = toCents(el("received").value);
+      if (isNaN(received) || received < Basket.total(basket)) {
+        el("message").textContent = "The amount is not enough.";
+        el("change").textContent = "";
+        return;
+      }
+      var sale = Payment.payByCash(basket, received);
+      el("message").textContent = "Paid by cash. Receipt " + sale.receipt + ".";
+      newSale();
+      el("change").textContent = euros(sale.changeCents);
+    });
+
+    // A browser keeps file pages apart, so a test page that frames this one drives it by
+    // messages: set an input, click a button, read some text.
+    window.addEventListener("message", function (event) {
+      var m = event.data || {};
+      var answer = { n: m.n };
+      if (m.op === "set") {
+        el(m.id).value = m.value;
+      } else if (m.op === "click") {
+        el(m.id).click();
+      } else if (m.op === "read") {
+        answer.value = m.id === "title" ? document.title
+          : m.id === "heading" ? document.querySelector("h1").textContent
+          : m.id === "page" ? document.body.innerText
+          : m.id === "sales" ? Payment.sales.length
+          : el(m.id).textContent;
+      }
+      event.source.postMessage(answer, "*");
+    });
+
+    render();
+  </script>
 </body>
 </html>
