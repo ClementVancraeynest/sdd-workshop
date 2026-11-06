@@ -21,6 +21,21 @@ Basket.add(b, { name: "Hat", priceCents: 1000 }, 1);
 var second = Payment.payByCard(b);
 check("2 receipt numbers: two sales in a row get R-1 and R-2",
   [sale.receipt, second.receipt], ["R-1", "R-2"]);
+
+Payment.reset();
+var c = Basket.create();
+Basket.add(c, { name: "Shirt", priceCents: 2000 }, 1);
+Basket.add(c, { name: "Cap", priceCents: 1550 }, 1);
+var cash = Payment.payByCash(c, 4000);
+check("1 pay by cash with change: 3550 paid with 4000 gives 450 change",
+  { method: cash.method, changeCents: cash.changeCents, receivedCents: cash.receivedCents },
+  { method: "cash", changeCents: 450, receivedCents: 4000 });
+
+var before = Payment.sales.length;
+checkThrows("2 cash not enough: 3550 with 3000 is refused", function () {
+  Payment.payByCash(c, 3000);
+}, "not enough");
+check("2 cash not enough: nothing is recorded", Payment.sales.length, before);
 </script>
 </body>
 </html>
