@@ -1,1 +1,14 @@
 when	who	what	why	evidence
+2026-11-06T09:58	group 1	Decision 1: payment methods are card and cash	not given	DOMAIN.md, decision 1
+2026-11-06T10:02	group 1	Decision 2: VAT included in the price only, no separate line	not given	DOMAIN.md, decision 2
+2026-11-06T10:03	group 1	Decision 3: returns without a receipt are refused	not given	DOMAIN.md, decision 3
+2026-11-06T10:09	group 1	Refunds: the cashier chooses, per return, card or cash from the drawer, whatever the original payment method	not given	chat, change checkout-basket-and-returns
+2026-11-06T10:10	group 1	Rounding: a discounted price is rounded down to the cent, in the customer's favour (19.99 at 30 % is 13.99)	not given	chat, change checkout-basket-and-returns
+2026-11-06T10:19	group 1	Returns: over all returns of a sale, an article cannot come back more times than it was bought	not given	chat, ticket 005
+2026-11-06T10:20	group 1	Backlog signed off: tickets 001 to 008, ACCEPTANCE numbers kept, 003/004 and 005/006 stay separate	"backlog pret"	tickets/backlog-ready.md
+2026-11-06T10:52	group 1	Node limit: the agent may run 5 minutes before the node cuts it	not given	graph/NODE.md, tickets/000-node.md
+2026-11-06T10:55	group 1	Node folder: the agent may touch only app	not given	graph/NODE.md, tickets/000-node.md
+2026-11-06T10:56	group 1	Node report: an agent that ends without a report is red	not given	graph/NODE.md, tickets/000-node.md
+2026-11-06T11:36	group 1	Rounds: two rounds back to the worker before a person decides	not given	graph/path.jsonl
+2026-11-06T11:36	group 1	Reviewer may block: tests, lint and design	not given	.github/skills/reviewer/SKILL.md
+2026-11-06T11:40	group 1	Merge: a person reads the pull request and presses merge	not given	graph/path.jsonl
