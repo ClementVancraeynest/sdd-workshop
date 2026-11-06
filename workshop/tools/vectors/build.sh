@@ -5,6 +5,7 @@
 #   bin/vectors-darwin-<arch>   the program for a Mac, Apple chip (arm64) or Intel (amd64),
 #                               one file, no library needed.
 #   bin/vectors-windows-amd64.exe  the same program for Windows, run from Git's sh.
+#   bin/vectors-linux-<arch>    the same program for Linux, Intel/AMD (amd64) or ARM (arm64).
 #   sh workshop/tools/vectors/build.sh <folder with model.safetensors and vocab.txt>
 # Needs Go. Plain Go, no C, so another system is one more line in the loop below.
 set -eu
@@ -13,7 +14,7 @@ here=$(cd "$(dirname "$0")" && pwd)
 out=$(cd "$here/../../inputs/hour-4/memory" && pwd)
 go -C "$here" run ./convert "$hf" "$out/minilm.bin"
 mkdir -p "$out/bin"
-for target in darwin/arm64 darwin/amd64 windows/amd64; do
+for target in darwin/arm64 darwin/amd64 windows/amd64 linux/amd64 linux/arm64; do
   os=${target%/*} arch=${target#*/}
   file="$out/bin/vectors-$os-$arch"
   if [ "$os" = windows ]; then file="$file.exe"; fi

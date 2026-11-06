@@ -239,7 +239,7 @@ own_day_first() {
     memory ask --example "who merges" | grep -q 'example-team/'
 }
 check 'the model, minilm.bin' test -s "$mem/minilm.bin"
-for v in darwin-arm64 darwin-amd64; do
+for v in darwin-arm64 darwin-amd64 linux-amd64 linux-arm64; do
   check "the vectors program for $v" test -s "$mem/bin/vectors-$v"
 done
 check "everything the example team said and wrote has its vector" vectors_ready "$mem/example-team.sqlite"
